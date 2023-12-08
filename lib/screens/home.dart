@@ -52,31 +52,37 @@ class _HomeState extends State<Home> {
     AssetImage('assets/room1_dark.png'),
     AssetImage('assets/room2_dark.png')
   ];
+  void removeDuplicate() {
+    for (int i = 0; i < activeDevices.length; i++) {
+      for (int j = i + 1; j < activeDevices.length; j++) {
+        if (activeDevices[i].did == activeDevices[j].did) {
+          activeDevices.removeAt(j);
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    removeDuplicate();
     return Container(
       width: double.infinity,
       child: RefreshIndicator(
         backgroundColor: uic.primarySwatch,
         color: uic.yellow,
-        
-        onRefresh: () async{
-        
-           if (currentHome != null) {
-      rooms = userdetails.homes[homeIndex].rooms;
-      activeDevices = currentHome!.activeDevices;
-    } else {
-      rooms =
-          userdetails.homes.isEmpty ? [] : userdetails.homes[homeIndex].rooms;
-      activeDevices = userdetails.homes.isEmpty
-          ? []
-          : userdetails.homes[homeIndex].activeDevices;
-    }
-              setState(() {
-                
-              });
-           
-           
+        onRefresh: () async {
+          if (currentHome != null) {
+            rooms = userdetails.homes[homeIndex].rooms;
+            activeDevices = currentHome!.activeDevices;
+          } else {
+            rooms = userdetails.homes.isEmpty
+                ? []
+                : userdetails.homes[homeIndex].rooms;
+            activeDevices = userdetails.homes.isEmpty
+                ? []
+                : userdetails.homes[homeIndex].activeDevices;
+          }
+          setState(() {});
         },
         child: ListView(
           children: <Widget>[
@@ -100,9 +106,7 @@ class _HomeState extends State<Home> {
                   ? GestureDetector(
                       onHorizontalDragEnd: (details) {
                         print('ouch');
-                        setState(() {
-                          
-                        });
+                        setState(() {});
                       },
                       child: Center(
                           child: Text(
@@ -114,7 +118,6 @@ class _HomeState extends State<Home> {
                       )),
                     )
                   : ListView.builder(
-                    
                       scrollDirection: Axis.horizontal,
                       itemCount: activeDevices.length,
                       itemBuilder: (context, index) {
@@ -125,7 +128,7 @@ class _HomeState extends State<Home> {
                                   left: 15, bottom: 20, top: 10),
                               child: Container(
                                 // duration: Duration(milliseconds: 500),
-      
+
                                 width: 175,
                                 height: 200,
                                 alignment: Alignment.center,
@@ -168,6 +171,7 @@ class _HomeState extends State<Home> {
                                           onTap: () {
                                             activeDevices[index].status =
                                                 !activeDevices[index].status;
+                                            //remove duplicates from active devices
                                             changeStatus(activeDevices[index]);
                                             setState(() {});
                                             Future.delayed(Duration(seconds: 3),
@@ -179,6 +183,7 @@ class _HomeState extends State<Home> {
                                                 }
                                               });
                                             });
+                                            print(activeDevices);
                                           },
                                         ),
                                       ),

@@ -75,96 +75,100 @@ class _DashBoardState extends State<DashBoard> {
   List temp = [];
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: userdetails.homes.isEmpty
-          ? Text('no data')
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 20, 0, 30),
-                  alignment: Alignment.centerLeft,
-                  child: Text('Power Consumption ',
-                      style: TextStyle(
-                        color: ui.textcolor,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      )),
-                ),
-                Container(
-                  child: Text('${userdetails.homes[0].totalconsumption} Wh',
-                      style: TextStyle(
-                        color: ui.yellow,
-                        fontSize: 66,
-                        fontWeight: FontWeight.bold,
-                      )),
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 20, 0, 30),
-                  alignment: Alignment.centerLeft,
-                  child: Text('This Week',
-                      style: TextStyle(
-                        color: ui.textcolor,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      )),
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 20, 20, 30),
-                  height: 300,
-                  child: //create a barchart using the fl_chart package
-                      BarChart(
-                    BarChartData(
-                      maxY: maxval,
-                      minY: 0,
-                      barTouchData: BarTouchData(
-                          touchTooltipData: BarTouchTooltipData(
-                              tooltipBgColor: ui.primarySwatch,
-                              getTooltipItem:
-                                  (group, groupIndex, rod, rodIndex) {
-                                return BarTooltipItem(
-                                    rod.toY.toString() + ' Wh',
-                                    TextStyle(
-                                      color: ui.textcolor,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ));
-                              })),
-                      barGroups: _chartGroups(),
-                      borderData: FlBorderData(
-                          border: Border(
-                              bottom: BorderSide(color: ui.textcolor, width: 2),
-                              left: BorderSide(color: ui.textcolor, width: 2))),
-                      gridData: FlGridData(
-                          show: true,
-                          drawHorizontalLine: true,
-                          drawVerticalLine: false),
-                      titlesData: FlTitlesData(
-                        bottomTitles: AxisTitles(sideTitles: _bottomTitles),
-                        leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                          showTitles: true,
-                          interval: maxval / 5,
-                          reservedSize: 40,
-                          getTitlesWidget: (value, meta) {
-                            return Text(value.toInt().toString(),
-                                style: TextStyle(
-                                  color: ui.textcolor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ));
-                          },
+    print(userdetails.homes[homeIndex].consumptionHistory);
+    return SingleChildScrollView(
+      child: Center(
+        child: userdetails.homes.isEmpty
+            ? Text('no data')
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 20, 0, 30),
+                    alignment: Alignment.centerLeft,
+                    child: Text('Predicted Bill ',
+                        style: TextStyle(
+                          color: ui.textcolor,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
                         )),
-                        topTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        rightTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
+                  ),
+                  Container(
+                    child: Text(
+                        '${userdetails.homes[homeIndex].getCost().round()} ₹',
+                        style: TextStyle(
+                          color: ui.yellow,
+                          fontSize: 66,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 20, 0, 30),
+                    alignment: Alignment.centerLeft,
+                    child: Text('This Week',
+                        style: TextStyle(
+                          color: ui.textcolor,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 20, 20, 30),
+                    height: 300,
+                    child: //create a barchart using the fl_chart package
+                        BarChart(
+                      BarChartData(
+                        maxY: maxval,
+                        minY: 0,
+                        barTouchData: BarTouchData(
+                            touchTooltipData: BarTouchTooltipData(
+                                tooltipBgColor: ui.primarySwatch,
+                                getTooltipItem:
+                                    (group, groupIndex, rod, rodIndex) {
+                                  return BarTooltipItem(
+                                      rod.toY.toString() + ' Wh',
+                                      TextStyle(
+                                        color: ui.textcolor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ));
+                                })),
+                        barGroups: _chartGroups(),
+                        borderData: FlBorderData(
+                            border: Border(
+                                bottom: BorderSide(color: ui.textcolor, width: 2),
+                                left: BorderSide(color: ui.textcolor, width: 2))),
+                        gridData: FlGridData(
+                            show: true,
+                            drawHorizontalLine: true,
+                            drawVerticalLine: false),
+                        titlesData: FlTitlesData(
+                          bottomTitles: AxisTitles(sideTitles: _bottomTitles),
+                          leftTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                            showTitles: true,
+                            interval: maxval / 5,
+                            reservedSize: 40,
+                            getTitlesWidget: (value, meta) {
+                              return Text(value.toInt().toString(),
+                                  style: TextStyle(
+                                    color: ui.textcolor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ));
+                            },
+                          )),
+                          topTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
+                          rightTitles: AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+      ),
     );
   }
 

@@ -83,6 +83,7 @@ Future getHomeDetails(index) async {
               List.from(values.child('consumptionhistory').value as Iterable));
           List chist =
               List.from(values.child('consumptionhistory').value as List);
+          print('datafrom db {$chist}');
           HomeDetails home = HomeDetails(
             hid: homeID,
             name: values1.children.elementAt(index).value.toString(),
@@ -215,12 +216,11 @@ Future getConsumption() async {
                       userdetails.homes[homeIndex].activeDevices.remove(device);
                     device.consumption =
                         double.parse(devices[i]['consumption'].toString());
-                    // print(devices[i]['consumption']);
+                     print(devices[i].name + devices[i]['consumption']);
                   }
                 }
                 userdetails.homes[homeIndex].totalconsumption +=
                     device.getConsumption();
-
                 // double sumofotherdays
               });
             });

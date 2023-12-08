@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:powervortex/global.dart';
 
 //fn to find the room from the device id
-Room getRoomFromDeviceID(String did)  {
+Room getRoomFromDeviceID(String did) {
   for (var room in userdetails.homes[homeIndex].rooms) {
     for (var board in room.boards) {
       for (var device in board.devices) {
@@ -55,7 +55,6 @@ DeviceType getDeviceType(type) {
   }
   return DeviceType.other;
 }
-
 
 class Device {
   String did;
@@ -123,11 +122,10 @@ class HomeDetails {
   double totalconsumption = 0;
   List<Room> rooms;
   List<UserDetails> users;
-  List consumptionHistory =[0,0,0,0,0,0,0];
+  List consumptionHistory = [0, 0, 0, 0, 0, 0, 0];
   List<Device> activeDevices = [];
   HomeDetails(
-      {
-      required this.name,
+      {required this.name,
       required this.hid,
       required this.rooms,
       required this.users});
@@ -145,6 +143,36 @@ class HomeDetails {
 
   void addUser(UserDetails user) {
     users.add(user);
+  }
+
+  double getCost() {
+    double units = getTotalConsumption()*4 / 1000;
+    print('units: $units');
+    double charge = 0.0;
+    int fixedCharge = 20; // Assuming single-phase connection
+
+    if (units <= 250) {
+      // Telescopic Billing
+      if (units > 200) charge += (units - 200) * 7.00;
+      if (units > 150) charge += (min(units, 200) - 150) * 5.80;
+      if (units > 100) charge += (min(units, 150) - 100) * 4.20;
+      if (units > 50) charge += (min(units, 100) - 50) * 3.20;
+      charge += min(units, 50) * 2.80;
+    } else {
+      // Non-Telescopic Billing
+      if (units > 500)
+        charge = units * 7.50;
+      else if (units > 400)
+        charge = units * 6.70;
+      else if (units > 350)
+        charge = units * 6.10;
+      else if (units > 300)
+        charge = units * 5.70;
+      else
+        charge = units * 5.00;
+    }
+
+    return charge + fixedCharge;
   }
 }
 

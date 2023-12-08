@@ -14,22 +14,22 @@ class RoomPage extends StatefulWidget {
 //
 
 class _RoomPageState extends State<RoomPage> {
-  Future runTimer() async {
-    Timer.periodic(Duration(seconds: 1), (timer) async {
-      if (userdetails.homes.length > 0) {
-        for (HomeDetails home in userdetails.homes) {
-          for (Device device in home.activeDevices) {
-            if (device.status) {
-              device.consumption += 0.1;
-              home.totalconsumption += 0.1;
-              await changeConsumption(device);
-            }
-          }
-        }
-      }
-      setState(() {});
-    });
-  }
+  // Future runTimer() async {
+  //   Timer.periodic(Duration(seconds: 1), (timer) async {
+  //     if (userdetails.homes.length > 0) {
+  //       for (HomeDetails home in userdetails.homes) {
+  //         for (Device device in home.activeDevices) {
+  //           if (device.status) {
+  //             device.consumption += 0.1;
+  //             home.totalconsumption += 0.1;
+  //             await changeConsumption(device);
+  //           }
+  //         }
+  //       }
+  //     }
+  //     setState(() {});
+  //   });
+  // }
 
   TextEditingController _devicename = TextEditingController();
   late DeviceType _deviceType;
