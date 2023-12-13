@@ -90,7 +90,7 @@ class _ScheduleState extends State<Schedule> {
       floatingActionButton: FloatingActionButton(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Icon(Icons.add),
+          child: Icon(Icons.add, color: uic.background),
           backgroundColor: uic.secondary,
           onPressed: () {
             showSheet();

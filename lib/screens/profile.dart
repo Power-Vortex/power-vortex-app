@@ -203,7 +203,7 @@ class _ProfileState extends State<Profile> {
                       crossAxisCount: 3,
                       childAspectRatio: .95,
                       crossAxisSpacing: 10,
-                      mainAxisSpacing: 410,
+                      mainAxisSpacing: 20,
                       mainAxisExtent: 150
 
                       
