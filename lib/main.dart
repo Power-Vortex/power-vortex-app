@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:powervortex/database/collections.dart';
 import 'package:powervortex/global.dart';
+import 'package:powervortex/obj/objects.dart';
 import 'screens/splash.dart';
 import 'screens/home.dart';
 import 'obj/ui.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'screens/dashboard.dart';
 import 'screens/schedule.dart';
@@ -16,8 +18,13 @@ import 'screens/login.dart';
 import 'screens/profile.dart';
 import 'screens/about.dart';
 import '../database/auth.dart';
+import './api/gemini.dart';
+import './api/apikey.dart';
+
+import 'package:flutter_gemini/flutter_gemini.dart';
 
 void main() async {
+  Gemini.init(apiKey: API_KEY);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -76,6 +83,20 @@ class _BodyState extends State<Body> {
 
   PageController _pageController = PageController();
   int _pageIndex = 0;
+  stt.SpeechToText _speechToText = stt.SpeechToText();
+  bool _speechEnabled = false;
+  bool _isListening = false;
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize(
+        onStatus: (value) => print(value), onError: (value) => print(value));
+    print('done');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initSpeech();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,18 +119,15 @@ class _BodyState extends State<Body> {
             key: _key,
             slideDirection: SlideDirection.RIGHT_TO_LEFT,
             appBar: SliderAppBar(
-                trailing: GestureDetector(
-                  onTap: () => setState(() {}),
-                  child: Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: Image(image: AssetImage('assets/logotext.png')),
-                  ),
+                trailing: Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Image(image: AssetImage('assets/logotext.png')),
                 ),
                 drawerIconColor: uic.textcolor,
                 appBarColor: uic.background,
                 title: Text('')),
             slider: Container(
-              padding:EdgeInsets.only(top: 20) ,
+              padding: EdgeInsets.only(top: 20),
               alignment: Alignment.center,
               color: uic.primarySwatch,
               child: ListView(
@@ -119,7 +137,9 @@ class _BodyState extends State<Body> {
                     backgroundColor: uic.yellow,
                     child: CircleAvatar(
                       radius: 75,
-                      backgroundImage:currentuser!.photoURL==null? AssetImage('assets/logotransparent.png'):image.image,
+                      backgroundImage: currentuser!.photoURL == null
+                          ? AssetImage('assets/logotransparent.png')
+                          : image.image,
                     ),
                   ),
                   //slideOption('Settings', Icons.settings, () {}),
@@ -244,6 +264,115 @@ class _BodyState extends State<Body> {
                 ],
               ),
             ),
+          ),
+        ),
+        floatingActionButton: Container(
+          alignment: Alignment.bottomLeft,
+          padding: EdgeInsets.only(left: 40, bottom: 20),
+          child: FloatingActionButton(
+            shape: RoundedRectangleBorder(
+                side: BorderSide(color: uic.textcolor, width: 0.2),
+                borderRadius: BorderRadius.circular(50)),
+            onPressed: () async {
+              String words = '';
+              // Navigator.pushNamed(context, '/home');
+              await HapticFeedback.vibrate();
+              if (_speechEnabled) {
+                try {
+                  //testGemini();
+                  _speechToText
+                      .listen(
+                        onResult: (value) async {
+                          words = value.recognizedWords;
+                          setState(() {});
+                          print(words);
+
+                          final gemini = Gemini.instance;
+                          List<String> content = [];
+                          gemini.streamGenerateContent('''Hi i need your help
+I will give you a sentence you have to break it down for me. Sentence will say about turning a device on or off from a bedroom.
+For example if the sentence is 
+Turn on light one from bedroom one you should reply with 
+on,light1,bedroom1
+As comma separated values nothing more or less each response should contain 3 such words that on/off,device,room
+
+The given sentence is 
+$words''').listen((value) async {
+                            content = value.output!.split(',');
+                            print(content);
+                                 Device device = getDeviceFromName(
+                              roomname: content[2].trim(), devicename: content[1].trim());
+                          if (device.did == '0000') {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text('Device not found'),
+                                duration: Duration(seconds: 3)));
+                            return;
+                          }
+                          device.status = content[0] == 'on' ? true : false;
+                          changeStatus(device);
+                          //show success snackbar
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  '${device.name} of ${content[1]} has turned ${device.status ? 'on' : 'off'}'),
+                              duration: Duration(seconds: 3)));
+                          }).onError((e) {
+                            print(e.toString());
+                          });
+
+                        
+                        },
+
+                        listenFor: Duration(seconds: 10),
+                        pauseFor: Duration(seconds: 3),
+
+                        cancelOnError: true,
+                        partialResults: false,
+                        //onDevice: true,
+                        localeId: 'en_IN',
+                      )
+                      .then((value) => {
+                            print(value),
+                          });
+
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          backgroundColor: uic.primarySwatch,
+                          title: Text(
+                            'Listening...',
+                            style: TextStyle(color: uic.textcolor),
+                          ),
+                          content: Text(
+                            words,
+                            style: TextStyle(color: uic.textcolor),
+                          ),
+                          actions: [
+                            TextButton(
+                                onPressed: () async {
+                                  await _speechToText.stop();
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  'Stop',
+                                  style: TextStyle(color: uic.yellow),
+                                ))
+                          ],
+                        );
+                      });
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(words == '' ? 'No input detected' : words),
+                      duration: Duration(seconds: 3)));
+                }
+              }
+            },
+            child: Icon(
+              Icons.mic,
+              size: 30,
+              color: uic.primarySwatch,
+            ),
+            backgroundColor: uic.secondary,
           ),
         ),
         bottomNavigationBar: GNav(

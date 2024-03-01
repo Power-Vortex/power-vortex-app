@@ -36,3 +36,28 @@ Future<void> showNotification(devicename, roomname, status) async {
     payload: 'Custom Payload',
   );
 }
+
+//fn to find device from room name and device name
+Device getDeviceFromName(
+    {required String roomname, required String devicename}) {
+  for (var room in userdetails.homes[homeIndex].rooms) {
+   // print(room.name.toLowerCase() + ' ' + roomname.toLowerCase());
+    if (room.name.toLowerCase() == roomname.toLowerCase()) {
+      for (var board in room.boards) {
+        for (var device in board.devices) {
+          if (device.name.toLowerCase() == devicename.toLowerCase()) {
+            return device;
+          }
+        }
+      }
+    }
+  }
+  return Device(
+      did: '0000',
+      name: 'error',
+      type: DeviceType.other,
+      status: true,
+      consumption: 00,
+      index: 0,
+      bid: '0000');
+}

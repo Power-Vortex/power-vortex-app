@@ -74,7 +74,7 @@ appBar: AppBar(
                 ProfileWidget(
                   imagePath: 'assets/profile2.jpg',
                   name: 'Ashwin A',
-                  email: 'ashwin022002@gmail.com',
+                  email: 'ashwin022001@gmail.com',
                 ),
               ],
             ),
