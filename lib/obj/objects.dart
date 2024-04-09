@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:powervortex/global.dart';
+import 'package:powervortex/screens/schedule.dart';
 
 //fn to find the room from the device id
 Room getRoomFromDeviceID(String did) {
@@ -124,6 +125,7 @@ class HomeDetails {
   List<UserDetails> users;
   List consumptionHistory = [0, 0, 0, 0, 0, 0, 0];
   List<Device> activeDevices = [];
+  List<ScheduleData> schedules = [];
   HomeDetails(
       {required this.name,
       required this.hid,

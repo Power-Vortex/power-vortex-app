@@ -10,7 +10,7 @@ late User? currentuser;
 late UIComponents uic;
 late UserDetails userdetails;
 int dayindex = 0;
-List schedules = [];
+
 late Image image;
 int homeIndex = 0;
 late FlutterLocalNotificationsPlugin notifications;

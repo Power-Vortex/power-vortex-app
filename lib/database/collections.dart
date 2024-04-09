@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:powervortex/global.dart';
 import 'package:powervortex/obj/objects.dart';
+import 'package:powervortex/screens/schedule.dart';
 import 'dart:async';
 import '../global.dart';
 import 'package:powervortex/screens/home.dart';
@@ -189,7 +190,7 @@ Future getConsumption() async {
       await dbRef.child('boards').once().then((value) async {
         if (value.snapshot.hasChild(room.boards.first.bid)) {
           //print(room.boards.first.bid);
-         
+
           await dbRef
               .child('boards')
               .child(room.boards.first.bid)
@@ -216,7 +217,7 @@ Future getConsumption() async {
                       userdetails.homes[homeIndex].activeDevices.remove(device);
                     device.consumption =
                         double.parse(devices[i]['consumption'].toString());
-                     print(devices[i].name + devices[i]['consumption']);
+                    print(devices[i].name + devices[i]['consumption']);
                   }
                 }
                 userdetails.homes[homeIndex].totalconsumption +=
@@ -376,3 +377,11 @@ Future listenForConsumptionChanges() async {
   // });
   // print(userdetails.homes[0].rooms.first.boards.first.devices);
 }
+
+// void addShedule(ScheduleData data) {
+//   DatabaseReference dbRef = FirebaseDatabase.instance.ref();
+//   dbRef
+//       .child('homes')
+//       .child(userdetails.homes[homeIndex].hid)
+//       .child('Schedule');
+// }

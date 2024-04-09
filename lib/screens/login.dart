@@ -412,7 +412,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                           )),
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Color(0xffE1BA48),
+                            backgroundColor: Color(0xffE1BA48),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
                           ),
@@ -616,7 +616,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Color(0xffE1BA48),
+                          backgroundColor: Color(0xffE1BA48),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                         ),

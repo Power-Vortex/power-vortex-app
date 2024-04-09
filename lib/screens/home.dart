@@ -29,6 +29,7 @@ class _HomeState extends State<Home> {
           ? []
           : userdetails.homes[homeIndex].activeDevices;
     }
+    statechange();
   }
 
   _HomeState() {}
@@ -38,7 +39,7 @@ class _HomeState extends State<Home> {
       ? []
       : userdetails.homes[homeIndex].activeDevices;
   void statechange() {
-    Timer.periodic(Duration(seconds: 3), (timer) {
+    Timer.periodic(Duration(seconds: 4), (timer) {
       if (!mounted) setState(() {});
     });
   }
@@ -105,7 +106,7 @@ class _HomeState extends State<Home> {
               child: activeDevices.isEmpty
                   ? GestureDetector(
                       onHorizontalDragEnd: (details) {
-                        print('ouch');
+                        //print('ouch');
                         setState(() {});
                       },
                       child: Center(

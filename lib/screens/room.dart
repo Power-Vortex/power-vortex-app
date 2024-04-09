@@ -67,19 +67,8 @@ class _RoomPageState extends State<RoomPage> {
           onPressed: () => Navigator.of(context).pop(),
           color: uic.secondary,
         ),
-        title: Text(room.name,
-            style: TextStyle(
-              color: uic.secondary,
-              fontSize: 23,
-              fontWeight: FontWeight.bold,
-            )),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
-      floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16))),
-        onPressed: () {
+        actions: [
+          IconButton(onPressed: (){
           // show bottom sheet
           showModalBottomSheet(
               backgroundColor: uic.secondary,
@@ -90,175 +79,26 @@ class _RoomPageState extends State<RoomPage> {
               )),
               context: context,
               builder: (context) {
-                return StatefulBuilder(
-                    builder: (BuildContext ctx, StateSetter setState) {
-                  return Container(
-                    height: 500,
-                    child: Scaffold(
-                      backgroundColor: Colors.transparent,
-                      body: ListView(
-                        children: [
-                          SizedBox(height: 40),
-                          Container(
-                            padding:
-                                EdgeInsets.only(left: 20, top: 20, bottom: 30),
-                            alignment: Alignment.centerLeft,
-                            child: Text("Setup Device",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 38,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                          ),
-
-                          Container(
-                            padding: EdgeInsets.only(left: 20, right: 20),
-                            child: TextField(
-                              controller: _devicename,
-                              decoration: InputDecoration(
-                                hintText: "Device Name",
-                                hintStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                border: UnderlineInputBorder(
-
-                                    // borderRadius: BorderRadius.circular(16),
-                                    ),
-                              ),
-                            ),
-                          ),
-                          //add a dropdown for device type
-                          SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(left: 20, right: 20),
-                                child: DropdownButton(
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  hint: Text(devicename),
-                                  value: null,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _deviceType = value as DeviceType;
-                                      devicename = _deviceType
-                                          .toString()
-                                          .replaceAll('.', ' : ');
-                                    });
-                                  },
-                                  items: const[
-                                    DropdownMenuItem(
-                                      child: Text("Light"),
-                                      value: DeviceType.light,
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("Fan"),
-                                      value: DeviceType.fan,
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("AC"),
-                                      value: DeviceType.ac,
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("TV"),
-                                      value: DeviceType.tv,
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("Washing Machine"),
-                                      value: DeviceType.washingMachine,
-                                    ),
-
-                                    DropdownMenuItem(
-                                      child: Text("Other"),
-                                      value: DeviceType.other,
-                                    ),
-                                    //add confirm button
-                                  ],
-                                ),
-                              ),
-                              //add number selecter for device index position in board
-                              Container(
-                                padding: EdgeInsets.only(left: 20, right: 20),
-                                child: DropdownButton(
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  hint: Text(deviceIndex),
-                                  value: null,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      deviceIndex = value.toString();
-                                    });
-                                  },
-                                  items: [
-                                    DropdownMenuItem(
-                                      child: Text("1"),
-                                      value: 1,
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("2"),
-                                      value: 2,
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("3"),
-                                      value: 3,
-                                    ),
-                                    DropdownMenuItem(
-                                      child: Text("4"),
-                                      value: 4,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Container(
-                            padding: EdgeInsets.only(left: 20, right: 20),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.black,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                              ),
-                              onPressed: () async {
-                                //add device to room
-                                setState(() {
-                                  room.boards[0].devices.add(Device(
-                                    bid: room.boards[0].bid,
-                                    index: int.parse(deviceIndex),
-                                    consumption: 0,
-                                    did: generateID(6),
-                                    name: _devicename.text,
-                                    type: _deviceType,
-                                    status: false,
-                                  ));
-                                });
-                                await addDevice(room.boards[0], deviceIndex,
-                                    room.boards[0].devices.last);
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("Confirm"),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                });
+                return modelSheet(context);
               }).then((value) => setState(() {}));
-        },
-        child: const Icon(Icons.add),
-        backgroundColor: uic.secondary,
+        }, icon: Icon(Icons.add), color: uic.secondary,)
+        ],
+        title: Text(room.name,
+            style: TextStyle(
+              color: uic.secondary,
+              fontSize: 23,
+              fontWeight: FontWeight.bold,
+            )),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.all(Radius.circular(16))),
+      //   onPressed: () {},
+      //   child: const Icon(Icons.add),
+      //   backgroundColor: uic.secondary,
+      // ),
       backgroundColor: uic.background,
       body: Column(
         children: [
@@ -375,6 +215,8 @@ class _RoomPageState extends State<RoomPage> {
                                               
                                               changeStatus(room
                                                   .boards[0].devices[index]);
+                                              userdetails.homes[homeIndex].activeDevices
+                                                  .add(room.boards[0].devices[index]);
                                               print(userdetails.homes[homeIndex]
                                                   .activeDevices.length);
                                             },
@@ -392,5 +234,172 @@ class _RoomPageState extends State<RoomPage> {
         ],
       ),
     );
+  }
+
+  StatefulBuilder modelSheet(BuildContext context) {
+    return StatefulBuilder(
+                  builder: (BuildContext ctx, StateSetter setState) {
+                return Container(
+                  height: 500,
+                  child: Scaffold(
+                    backgroundColor: Colors.transparent,
+                    body: ListView(
+                      children: [
+                        SizedBox(height: 40),
+                        Container(
+                          padding:
+                              EdgeInsets.only(left: 20, top: 20, bottom: 30),
+                          alignment: Alignment.centerLeft,
+                          child: Text("Setup Device",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 38,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
+
+                        Container(
+                          padding: EdgeInsets.only(left: 20, right: 20),
+                          child: TextField(
+                            controller: _devicename,
+                            decoration: InputDecoration(
+                              hintText: "Device Name",
+                              hintStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              border: UnderlineInputBorder(
+
+                                  // borderRadius: BorderRadius.circular(16),
+                                  ),
+                            ),
+                          ),
+                        ),
+                        //add a dropdown for device type
+                        SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                              child: DropdownButton(
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                hint: Text(devicename),
+                                value: null,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _deviceType = value as DeviceType;
+                                    devicename = _deviceType
+                                        .toString()
+                                        .replaceAll('.', ' : ');
+                                  });
+                                },
+                                items: const[
+                                  DropdownMenuItem(
+                                    child: Text("Light"),
+                                    value: DeviceType.light,
+                                  ),
+                                  DropdownMenuItem(
+                                    child: Text("Fan"),
+                                    value: DeviceType.fan,
+                                  ),
+                                  DropdownMenuItem(
+                                    child: Text("AC"),
+                                    value: DeviceType.ac,
+                                  ),
+                                  DropdownMenuItem(
+                                    child: Text("TV"),
+                                    value: DeviceType.tv,
+                                  ),
+                                  DropdownMenuItem(
+                                    child: Text("Washing Machine"),
+                                    value: DeviceType.washingMachine,
+                                  ),
+
+                                  DropdownMenuItem(
+                                    child: Text("Other"),
+                                    value: DeviceType.other,
+                                  ),
+                                  //add confirm button
+                                ],
+                              ),
+                            ),
+                            //add number selecter for device index position in board
+                            Container(
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                              child: DropdownButton(
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                hint: Text(deviceIndex),
+                                value: null,
+                                onChanged: (value) {
+                                  setState(() {
+                                    deviceIndex = value.toString();
+                                  });
+                                },
+                                items: [
+                                  DropdownMenuItem(
+                                    child: Text("1"),
+                                    value: 1,
+                                  ),
+                                  DropdownMenuItem(
+                                    child: Text("2"),
+                                    value: 2,
+                                  ),
+                                  DropdownMenuItem(
+                                    child: Text("3"),
+                                    value: 3,
+                                  ),
+                                  DropdownMenuItem(
+                                    child: Text("4"),
+                                    value: 4,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          padding: EdgeInsets.only(left: 20, right: 20),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            onPressed: () async {
+                              //add device to room
+                              setState(() {
+                                room.boards[0].devices.add(Device(
+                                  bid: room.boards[0].bid,
+                                  index: int.parse(deviceIndex),
+                                  consumption: 0,
+                                  did: generateID(6),
+                                  name: _devicename.text,
+                                  type: _deviceType,
+                                  status: false,
+                                ));
+                              });
+                              await addDevice(room.boards[0], deviceIndex,
+                                  room.boards[0].devices.last);
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("Confirm"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
   }
 }

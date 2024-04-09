@@ -1,5 +1,4 @@
-import '../global.dart';
-import './apikey.dart';
+
 import 'package:flutter_gemini/flutter_gemini.dart';
 
 void testGemini() {

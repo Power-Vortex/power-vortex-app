@@ -140,7 +140,7 @@ class _ProfileState extends State<Profile> {
             Align(
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: uic.yellow,
+                      backgroundColor: uic.yellow,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20))),
                   onPressed: () async {
@@ -526,7 +526,7 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                        primary: uic.background,
+                        backgroundColor: uic.background,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15))),
                   ),

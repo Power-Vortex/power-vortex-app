@@ -47,6 +47,7 @@ class _ScheduleState extends State<Schedule> {
   late Device selectedDevice;
   late Room selectedRoom;
   late bool selectedSwitch;
+  List<ScheduleData> schedules = userdetails.homes[homeIndex].schedules;
   void init() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings(
@@ -87,14 +88,19 @@ class _ScheduleState extends State<Schedule> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Icon(Icons.add, color: uic.background),
-          backgroundColor: uic.secondary,
-          onPressed: () {
-            showSheet();
-          }),
+      floatingActionButton: Container(
+        alignment: Alignment.bottomLeft,
+        padding: EdgeInsets.only(bottom: 20,left: 40),
+        child: FloatingActionButton(
+          
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Icon(Icons.add, color: uic.background),
+            backgroundColor: uic.secondary,
+            onPressed: () {
+              showSheet();
+            }),
+      ),
       backgroundColor: ui.background,
       body: Center(
           child: schedules.isEmpty
@@ -348,7 +354,7 @@ class _ScheduleState extends State<Schedule> {
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.black,
+                           backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
