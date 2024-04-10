@@ -126,7 +126,7 @@ class _DashBoardState extends State<DashBoard> {
                                 getTooltipItem:
                                     (group, groupIndex, rod, rodIndex) {
                                   return BarTooltipItem(
-                                      rod.toY.toString() + ' Wh',
+                                      rod.toY.toString() + ' kWh',
                                       TextStyle(
                                         color: ui.textcolor,
                                         fontSize: 18,

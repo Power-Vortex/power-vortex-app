@@ -276,13 +276,12 @@ class _BodyState extends State<Body> {
               tooltip: "Voice Command",
               backgroundColor: uic.background,
               //foregroundColor: uic.background,
-             //set radius to 50
-            
+              //set radius to 50
+
               shape: RoundedRectangleBorder(
-            
                   side: BorderSide(color: uic.yellow, width: 0.2),
                   borderRadius: BorderRadius.circular(10)),
-            
+
               onPressed: () async {
                 String words = '';
                 // Navigator.pushNamed(context, '/home');
@@ -319,11 +318,10 @@ class _BodyState extends State<Body> {
                     _speechToText
                         .listen(
                           onResult: (value) async {
-                            
                             words = value.recognizedWords;
                             setState(() {});
                             print(words);
-            
+
                             final gemini = Gemini.instance;
                             List<String> content = [];
                             gemini.streamGenerateContent('''Hi i need your help
@@ -337,7 +335,7 @@ class _BodyState extends State<Body> {
             $words''').listen((value) async {
                               content = value.output!.split(',');
                               print(content);
-            
+
                               Device device = getDeviceFromName(
                                   roomname: content[2].trim(),
                                   devicename: content[1].trim());
@@ -351,20 +349,32 @@ class _BodyState extends State<Body> {
                               }
                               device.status = content[0] == 'on' ? true : false;
                               changeStatus(device);
+                              if (device.status&&userdetails.homes[homeIndex].activeDevices.where((element) => element.did==device.did).isEmpty) {
+                                userdetails.homes[homeIndex].activeDevices.add(device);
+                               // userdetails.homes[homeIndex].activeDevices.add(device);
+                              }
                               Navigator.pop(context);
                               //show success snackbar
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(
                                       'Device "${device.name}" of Room "${content[2]}" has turned ${device.status ? 'on' : 'off'}'),
                                   duration: Duration(seconds: 3)));
+                                  setState(() {
+                                    
+                                  });
                             }).onError((e) {
                               print(e.toString());
+                              Navigator.pop(context);
+                              //show error snackbar
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text('Something went wrong please try again'),
+                                  duration: Duration(seconds: 3)));
                             });
                           },
-            
+
                           listenFor: Duration(seconds: 10),
                           pauseFor: Duration(seconds: 3),
-            
+
                           cancelOnError: true,
                           partialResults: false,
                           //onDevice: true,
@@ -373,12 +383,11 @@ class _BodyState extends State<Body> {
                         .then((value) => {
                               print(value),
                             });
-            
-                    
                   } catch (e) {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(words == '' ? 'No input detected' : words),
+                        content:
+                            Text(words == '' ? 'No input detected' : words),
                         duration: Duration(seconds: 3)));
                   }
                 }
@@ -388,7 +397,6 @@ class _BodyState extends State<Body> {
                 size: 30,
                 color: uic.yellow,
               ),
-              
             ),
           ),
         ),

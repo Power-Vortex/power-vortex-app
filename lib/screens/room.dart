@@ -171,7 +171,7 @@ class _RoomPageState extends State<RoomPage> {
                                               padding: EdgeInsets.only(
                                                   left: 20, right: 20),
                                               child: Text(
-                                                  'Consumption : ${room.boards[0].devices[index].consumption} Wh',
+                                                  'Consumption : ${room.boards[0].devices[index].consumption} kWh',
                                                   style: TextStyle(
                                                     color: uic.textcolor,
                                                     fontSize: 14,

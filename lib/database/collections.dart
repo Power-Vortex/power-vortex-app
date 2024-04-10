@@ -255,9 +255,7 @@ Future addDevice(Board board, index, Device device) async {
       'status': element.status,
     });
   });
-}
-
-Future changeStatus(Device device) async {
+}Future changeStatus(Device device) async {
   final dbRef = await FirebaseDatabase.instance.ref();
   dbRef
       .child('boards')
