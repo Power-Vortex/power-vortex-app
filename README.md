@@ -1,4 +1,4 @@
-# Power Vortex - Home Energy Management System
+# Power Vortex - Smart Energy Forecasting and Management with IoT and Machine Learning
 
 ![Power Vortex Logo](imageRead/power_vortex_logo.png)
 
